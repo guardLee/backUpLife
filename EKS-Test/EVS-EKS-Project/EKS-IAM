@@ -1,0 +1,44 @@
+Amazon EKS 관리형 IAM 정책을 가진 역할 생성 #플레인노드에 할당
+  Name: myAmazonEKSClusterRole
+  AWSPolicy: AmazonEKSClusterPolicy
+
+###AssumeRole json 파일
+cluster-role-trust-policy.json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "eks.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+
+###역할 생성/연결
+aws iam create-role \
+  --role-name myAmazonEKSClusterRole \
+  --assume-role-policy-document file://"cluster-role-trust-policy.json"
+
+AWS 관리형 정책을 역할에 연결
+aws iam attach-role-policy \
+  --policy-arn arn:aws:iam::aws:policy/AmazonEKSClusterPolicy \
+  --role-name myAmazonEKSClusterRole
+
+#################################################################################################
+WorkerNode를 위한 역할 생성 #워크노드에 할당
+  Name: myAmazonEKSNodeRole
+  AWSPolicy: AmazonEKSWorkerNodePolicy, AmazonEC2ContainerRegistryReadOnly, AmazonEKS_CNI_Policy
+
+###AssumRole json 파일
+
+###역할 생성/연결
+
+##################################################################################################
+클러스터 관리형 IAM 역할 #다른 IAM 유저에게 역할 할당
+
+
+
+

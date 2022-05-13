@@ -1,0 +1,30 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: ekstest-eks
+  region: ap-northeast-2
+  version: "1.21"
+
+# existing Subnet Using
+vpc:
+  subnets:
+    private:
+      ap-northeast-2a: { id: <subnet-id> }
+      ap-northeast-2c: { id: <subnet-id> }
+
+nodeGroups:
+  - name: ekstest-worker
+    instanceName: ekstest-worker
+    labels: { role: workers }
+    instanceType: t3.medium
+    desiredCapacity: 2
+    volumeType: gp3
+    volumeSize: 30
+    privateNetworking: true
+    iam:
+      withAddonPolicies:
+        imageBuilder: true # Amazon ECR Permission
+        albIngress: true  # albIngress Permission
+        cloudWatch: true # cloudWatch Permission
+        autoScaler: true # auto scaling Permission
